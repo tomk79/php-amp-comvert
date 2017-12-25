@@ -1,0 +1,32 @@
+{
+    "name": "tomk79/amp-convert",
+    "description": "HTML5で書かれたファイルをAMPフォーマットに変換します。",
+    "keywords": ["amp"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tomoya Koyanagi",
+            "email": "tomk79@gmail.com"
+        }
+    ],
+    "scripts":{
+        "test": [
+            "php ./vendor/phpunit/phpunit/phpunit"
+        ]
+    } ,
+    "repositories": [
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "lullabot/amp": "^1.1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*" ,
+        "phpdocumentor/phpdocumentor": "^2.9"
+    },
+    "autoload": {
+        "files": [
+            "php/amp-convert.php"
+        ]
+    }
+}
