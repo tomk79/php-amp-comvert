@@ -10,7 +10,10 @@ use Lullabot\AMP\Validate\Scope;
 /**
  * AMP Converter class
  */
-class main{
+class AMPConverter{
+
+	/** HTMLコード */
+	private $html;
 
 	/**
 	 * コストラクタ
@@ -19,12 +22,23 @@ class main{
 	}
 
 	/**
-	 * 変換を実行する
+	 * HTMLコードを読み込む
+	 * @param  String $html HTMLソースコード
+	 * @return Boolean 常に `true`
 	 */
-	public function convert($html){
+	public function load($html){
+		$this->html = $html;
+		return true;
+	}
+
+	/**
+	 * 変換を実行する
+	 * @return String AMP変換後のソースコード
+	 */
+	public function convert(){
 		// AMP 変換
 		$amp = new AMP();
-		$amp->loadHtml($html);
+		$amp->loadHtml($this->html);
 		$html = $amp->convertToAmpHtml();
 		return $html;
 	}

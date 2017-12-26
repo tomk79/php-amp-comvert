@@ -21,10 +21,13 @@ class mainTest extends PHPUnit_Framework_TestCase{
 	 */
 	public function testMain(){
 
-		$ampConv = new tomk79\ampConvert\main();
-
 		$html = file_get_contents(__DIR__.'/testdata/part.html');
-		$amp = $ampConv->convert($html);
+		$ampConv = new tomk79\ampConvert\AMPConverter();
+
+		$result = $ampConv->load($html);
+		$this->assertTrue( $result );
+
+		$amp = $ampConv->convert();
 		// var_dump($amp);
 
 		$this->assertTrue( gettype($amp) == gettype('') );
