@@ -34,6 +34,9 @@ class mainTest extends PHPUnit_Framework_TestCase{
 
 
 		$html = file_get_contents(__DIR__.'/testdata/full.html');
+		$result = $ampConv->load($html);
+		$this->assertTrue( $result );
+
 		$amp = $ampConv->convert($html);
 		// var_dump($amp);
 
