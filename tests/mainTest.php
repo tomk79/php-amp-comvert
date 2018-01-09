@@ -13,7 +13,7 @@ class mainTest extends PHPUnit_Framework_TestCase{
 	 * setup
 	 */
 	public function setup(){
-		// $this->fs = new \tomk79\filesystem();
+		$this->fs = new \tomk79\filesystem();
 	}
 
 	/**
@@ -29,6 +29,7 @@ class mainTest extends PHPUnit_Framework_TestCase{
 
 		$amp = $ampConv->convert();
 		// var_dump($amp);
+		$this->fs->save_file( __DIR__.'/testoutput/part.html', $amp );
 
 		$this->assertTrue( gettype($amp) == gettype('') );
 
@@ -39,6 +40,7 @@ class mainTest extends PHPUnit_Framework_TestCase{
 
 		$amp = $ampConv->convert($html);
 		// var_dump($amp);
+		$this->fs->save_file( __DIR__.'/testoutput/full.html', $amp );
 
 		$this->assertTrue( gettype($amp) == gettype('') );
 

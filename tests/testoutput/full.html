@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html amp>
 	<head>
 		<title>Full HTML Sample</title>
 		<meta charset="utf-8" />
@@ -30,20 +30,14 @@
 		<p class="test">Written in HTML 5.</p>
 		<ul>
 			<li><a href="part.html">normal link</a></li>
-			<li><a href="javascript:alert('JavaScript Alert');">JavaScript link</a></li>
-			<li><a href="#" onclick="alert('JavaScript Alert');">JavaScript link (onclick event)</a></li>
+			<li><a>JavaScript link</a></li>
+			<li><a href="#">JavaScript link (onclick event)</a></li>
 		</ul>
-		<script>alert('JavaScript Alert.');</script>
-		<div><img src="res/image.png" alt="Test Image" /></div>
-		<div><iframe src="part.html"></iframe></div>
-		<div><video src="res/video.mp4"></video></div>
-		<div><audio src="res/audio.mp3"></audio></div>
-		<form action="./full.html" method="get">
-			<input type="text" name="test1" value="" /><br />
-			<input type="image" name="test2" value="" /><br />
-			<input type="button" name="test3" value="button" /><br />
-			<input type="password" name="test4" value="" /><br />
-			<input type="file" name="test5" value="" /><br />
-		</form>
+		
+		<div><img src="res/image.png" alt="Test Image"></div>
+		<div><amp-iframe sandbox="allow-scripts allow-same-origin" layout="responsive" height="315" width="560" src="part.html"></amp-iframe></div>
+		<div><amp-video src="res/video.mp4" layout="responsive" height="315" width="560"></amp-video></div>
+		<div><amp-audio src="res/audio.mp3"></amp-audio></div>
+		
 	</body>
 </html>
