@@ -62,7 +62,7 @@ class AMPConverter{
 			$simple_html_dom->outertext = $amp->convertToAmpHtml();
 		}
 
-        // HTML要素に `amp` 属性を付加
+		// HTML要素に `amp` 属性を付加
 		$ret = $simple_html_dom->find('html');
 		foreach( $ret as $retRow ){
 			$retRow->amp = true;
