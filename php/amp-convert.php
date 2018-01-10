@@ -52,6 +52,9 @@ class AMPConverter{
 			DEFAULT_SPAN_TEXT // $defaultSpanText
 		);
 
+		// head要素をAMP変換する
+		$this->convert_head_to_amp($simple_html_dom);
+
 		// body要素をAMP変換する
 		$this->convert_body_to_amp($simple_html_dom);
 
@@ -62,6 +65,44 @@ class AMPConverter{
 		}
 
 		return $simple_html_dom->outertext;
+	}
+
+	/**
+	 * head要素をAMP変換する
+	 * @param  object $simple_html_dom Simple HTML DOM オブジェクト
+	 * @return void このメソッドは値を返しません
+	 */
+	private function convert_head_to_amp($simple_html_dom){
+		$ret = $simple_html_dom->find('head');
+		if(!count($ret)){
+			// headセクションがなければスキップ
+			return;
+		}
+		foreach( $ret as $head ){
+			$topIndent = preg_replace('/^(\s*)(.*?)$/s', '$1', $head->innertext);
+
+			// `http-equiv` を持つ meta 要素を削除
+			$tmpRet = $head->find('meta[http-equiv]');
+			foreach($tmpRet as $tmpRetRow){
+				$tmpRetRow->outertext = '';
+			}
+
+			// `charset` を持つ meta 要素を先頭に移動
+			$tmpRet = @$head->find('meta[charset]');
+			if( !count($tmpRet) ){
+				$tmpOutertext = '<meta charset="utf-8" />';
+			}else{
+				$tmpOutertext = '';
+				foreach($tmpRet as $tmpRetRow){
+					$tmpOutertext .= $tmpRetRow->outertext;
+					$tmpRetRow->outertext = '';
+				}
+			}
+			$head->innertext = $topIndent.$tmpOutertext.$head->innertext;
+
+		}
+
+		return;
 	}
 
 	/**
@@ -84,6 +125,7 @@ class AMPConverter{
 			$amp->loadHtml($simple_html_dom->outertext);
 			$simple_html_dom->outertext = $amp->convertToAmpHtml();
 		}
+		return;
 	}
 
 }

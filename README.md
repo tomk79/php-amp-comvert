@@ -21,14 +21,16 @@ echo $amp;
 
 ### 自動的に変換される項目
 
-- body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
+- 文書宣言が `<!DOCTYPE html>` に揃えられます。ない場合は追加されます。
 - html要素に amp属性 が追加されます。
+- charaset属性を持ったmeta要素が、headセクションの先頭に移動されます。ない場合は追加されます。
+- http-equiv属性を持ったmeta要素が削除されます。
+- body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
 
 ### 自動的に変換されない項目
 
 次の項目は自動的に処理されません。コーディング上の配慮が必要です。
 
-- 文書宣言は、 `<!DOCTYPE html>` にすること。
 - 通常ページの `rel=amphtml` の link要素の href属性は、AMPページのURLを指定する。
 - AMPページの `rel=canonical` の link要素の href属性は、通常ページのURLを指定する。存在しなければ自身(AMPページ)のURLを指定する。
 - head要素の最初の子要素は `<meta charset="utf-8">` でなければいけない。
@@ -63,8 +65,6 @@ echo $amp;
 	- head要素内の style要素には、 `amp-custom` 属性を付けて下さい。
 - link
 	- rel属性には、 [microformats.org](http://microformats.org/) に登録されている値を指定できます。 ただし、 `stylesheet`(許可されたカスタムフォントを除く)、 `preconnect`、 `prerender`、 `prefetch` は禁止されています。
-- meta
-	- http-equiv属性は禁止されています。
 - a
 	- href属性は `javascript:` で始めてはいけません。 target属性は `_blank` でなければいけません。
 - base
