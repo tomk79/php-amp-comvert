@@ -29,6 +29,7 @@ echo $amp;
 - head要素に `<script async src="https://cdn.ampproject.org/v0.js"></script>` が追加されます。
 - style要素に、 amp-custom属性が追加されます。
 - JSON-LD形式以外の script要素が削除されます。
+- 条件付きコメント(例： `<!--[if IE 6]>`)が削除されます。
 - body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
 
 ### 自動的に変換されない項目
@@ -39,7 +40,6 @@ echo $amp;
 - AMPページの `rel=canonical` の link要素の href属性は、通常ページのURLを指定してください。存在しなければ自身(AMPページ)のURLを指定します。
 - head要素に `<meta name="viewport" content="width=device-width,minimum-scale=1">` を含めてください。 `initial-scale=1` を加えることが推奨されます。
 - オープングラフ や Twitterカード の meta要素を 含めることが推奨されます。
-- HTMLで条件付きコメントは使用できません。(例： `<!--[if IE 6]>`)
 - スタイルシートは style要素に amp-custom属性 を付けてインラインで記述してください。 50KBを超えない範囲で、スタイルシートの制限事項を違反しないようにします。
 - 外部のスタイルシートはカスタムフォントを利用する以外では読み込めません。
 

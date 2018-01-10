@@ -72,6 +72,9 @@ class AMPConverter{
 		// style要素をAMP変換する
 		$html = $this->convert_style_to_amp($html);
 
+		// 条件付きコメントを削除する
+		$html = $this->remove_conditional_comment($html);
+
 		// HTML要素に `amp` 属性を付加
 		$simple_html_dom = $this->create_simple_html_dom($html);
 		$ret = $simple_html_dom->find('html');
@@ -114,7 +117,9 @@ class AMPConverter{
 	 * @return string 変換されたHTMLソース
 	 */
 	private function convert_style_to_amp($html_src){
+		// 先にこれをしておかないと、style の後にスペースが入らない (Simple HTML DOM のバグ？)
 		$html_src = preg_replace('/\<style\>/', '<style amp-custom>', $html_src);
+
 		$simple_html_dom = $this->create_simple_html_dom($html_src);
 
 		$ret = $simple_html_dom->find('style');
@@ -128,6 +133,16 @@ class AMPConverter{
 		}
 
 		return $simple_html_dom->outertext;
+	}
+
+	/**
+	 * 条件コメントを削除する
+	 * @param  string $html_src HTMLソース
+	 * @return string 変換されたHTMLソース
+	 */
+	private function remove_conditional_comment($html_src){
+		$html_src = preg_replace('/\<\!\-\-\[.*?\]\>.*?\<\!\[.*?\]\-\-\>/s', '', $html_src);
+		return $html_src;
 	}
 
 	/**
