@@ -25,6 +25,8 @@ echo $amp;
 - html要素に amp属性 が追加されます。
 - charaset属性を持ったmeta要素が、headセクションの先頭に移動されます。ない場合は追加されます。
 - http-equiv属性を持ったmeta要素が削除されます。
+- head要素に `style[amp-boilerplate]` が追加されます。
+- head要素に `<script async src="https://cdn.ampproject.org/v0.js"></script>` が追加されます。
 - body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
 
 ### 自動的に変換されない項目
@@ -33,10 +35,7 @@ echo $amp;
 
 - 通常ページの `rel=amphtml` の link要素の href属性は、AMPページのURLを指定する。
 - AMPページの `rel=canonical` の link要素の href属性は、通常ページのURLを指定する。存在しなければ自身(AMPページ)のURLを指定する。
-- head要素の最初の子要素は `<meta charset="utf-8">` でなければいけない。
 - head要素に `<meta name="viewport" content="width=device-width,minimum-scale=1">` を含めなければいけない。 `initial-scale=1` を加えることが望ましい。
-- head要素に `<script async src="https://cdn.ampproject.org/v0.js"></script>` を含めなければいけない。
-- head要素に boilerplate のスタイルシートを含めなければいけない。
 - JSON-LD形式の [schema.org](http://schema.org/) のマークアップを含めることが推奨される。
 - オープングラフ や Twitterカード の meta要素を 含めることが推奨される。
 - HTMLで条件付きコメントは使用できない。(`<!--[if IE 6]>`)

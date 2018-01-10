@@ -73,6 +73,9 @@ class AMPConverter{
 	 * @return void このメソッドは値を返しません
 	 */
 	private function convert_head_to_amp($simple_html_dom){
+		$ampproject_v0js = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0js.html'));
+		$boilerplate = trim(file_get_contents(__DIR__.'/../resources/boilerplate.html'));
+
 		$ret = $simple_html_dom->find('head');
 		if(!count($ret)){
 			// headセクションがなければスキップ
@@ -98,7 +101,12 @@ class AMPConverter{
 					$tmpRetRow->outertext = '';
 				}
 			}
-			$head->innertext = $topIndent.$tmpOutertext.$head->innertext;
+			$headInnerText = '';
+			$headInnerText .= $topIndent.$tmpOutertext;
+			$headInnerText .= $topIndent.$boilerplate;
+			$headInnerText .= $topIndent.$ampproject_v0js;
+			$headInnerText .= $head->innertext;
+			$head->innertext = $headInnerText;
 
 		}
 
