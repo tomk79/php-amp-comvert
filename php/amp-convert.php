@@ -32,6 +32,25 @@ class AMPConverter{
 	}
 
 	/**
+	 * Simple HTML DOM オブジェクトを生成する
+	 * @param  string $src HTMLソースコード
+	 * @return object Simple HTML DOM オブジェクト
+	 */
+	private function create_simple_html_dom( $src ){
+		// Simple HTML DOM
+		$simple_html_dom = str_get_html(
+			$src ,
+			true, // $lowercase
+			true, // $forceTagsClosed
+			DEFAULT_TARGET_CHARSET, // $target_charset
+			false, // $stripRN
+			DEFAULT_BR_TEXT, // $defaultBRText
+			DEFAULT_SPAN_TEXT // $defaultSpanText
+		);
+		return $simple_html_dom;
+	}
+
+	/**
 	 * 変換を実行する
 	 * @return String AMP変換後のソースコード
 	 */
@@ -42,21 +61,16 @@ class AMPConverter{
 		$html = preg_replace('/^(?:\s*\<!DOCTYPE.*?>)?/is', '<!DOCTYPE html>', $html);
 
 		// Simple HTML DOM
-		$simple_html_dom = str_get_html(
-			$html ,
-			true, // $lowercase
-			true, // $forceTagsClosed
-			DEFAULT_TARGET_CHARSET, // $target_charset
-			false, // $stripRN
-			DEFAULT_BR_TEXT, // $defaultBRText
-			DEFAULT_SPAN_TEXT // $defaultSpanText
-		);
-
-		// head要素をAMP変換する
-		$this->convert_head_to_amp($simple_html_dom);
+		$simple_html_dom = $this->create_simple_html_dom($html);
 
 		// body要素をAMP変換する
-		$this->convert_body_to_amp($simple_html_dom);
+		$simple_html_dom = $this->convert_body_to_amp($simple_html_dom);
+
+		// head要素をAMP変換する
+		$simple_html_dom = $this->convert_head_to_amp($simple_html_dom);
+
+		// script要素をAMP変換する
+		$simple_html_dom = $this->convert_script_to_amp($simple_html_dom);
 
 		// HTML要素に `amp` 属性を付加
 		$ret = $simple_html_dom->find('html');
@@ -65,6 +79,30 @@ class AMPConverter{
 		}
 
 		return $simple_html_dom->outertext;
+	}
+
+	/**
+	 * script要素をAMP変換する
+	 * @param  object $simple_html_dom Simple HTML DOM オブジェクト
+	 * @return void このメソッドは値を返しません
+	 */
+	private function convert_script_to_amp($simple_html_dom){
+
+		$ret = $simple_html_dom->find('script');
+		foreach( $ret as $script ){
+			if( $script->attr['type'] == 'application/ld+json' ){
+				// JSON-LD情報は残す
+				continue;
+			}
+			if( $script->attr['async'] && $script->attr['src'] == 'https://cdn.ampproject.org/v0.js' ){
+				// AMPが要求するJSは残す
+				continue;
+			}
+
+			$script->outertext = '';
+		}
+
+		return $this->create_simple_html_dom($simple_html_dom->outertext);
 	}
 
 	/**
@@ -79,7 +117,7 @@ class AMPConverter{
 		$ret = $simple_html_dom->find('head');
 		if(!count($ret)){
 			// headセクションがなければスキップ
-			return;
+			return $this->create_simple_html_dom($simple_html_dom->outertext);
 		}
 		foreach( $ret as $head ){
 			$topIndent = preg_replace('/^(\s*)(.*?)$/s', '$1', $head->innertext);
@@ -110,7 +148,7 @@ class AMPConverter{
 
 		}
 
-		return;
+		return $this->create_simple_html_dom($simple_html_dom->outertext);
 	}
 
 	/**
@@ -133,7 +171,7 @@ class AMPConverter{
 			$amp->loadHtml($simple_html_dom->outertext);
 			$simple_html_dom->outertext = $amp->convertToAmpHtml();
 		}
-		return;
+		return $this->create_simple_html_dom($simple_html_dom->outertext);
 	}
 
 }
