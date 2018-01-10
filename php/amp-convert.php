@@ -100,7 +100,7 @@ class AMPConverter{
 				// JSON-LD情報は残す
 				continue;
 			}
-			if( $script->attr['async'] && $script->attr['src'] == 'https://cdn.ampproject.org/v0.js' ){
+			if( $script->attr['async'] && preg_match('/^'.preg_quote('https://cdn.ampproject.org/', '/').'.*/', $script->attr['src']) ){
 				// AMPが要求するJSは残す
 				continue;
 			}
@@ -168,7 +168,10 @@ class AMPConverter{
 	private function convert_head_to_amp($html_src){
 		$simple_html_dom = $this->create_simple_html_dom($html_src);
 
-		$ampproject_v0js = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0js.html'));
+		$ampproject_js = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0js.html'));
+		$ampproject_amp_iframe = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0_amp_iframe.html'));
+		$ampproject_amp_video = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0_amp_video.html'));
+		$ampproject_amp_audio = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0_amp_audio.html'));
 		$boilerplate = trim(file_get_contents(__DIR__.'/../resources/boilerplate.html'));
 
 		$ret = $simple_html_dom->find('head');
@@ -199,7 +202,16 @@ class AMPConverter{
 			$headInnerText = '';
 			$headInnerText .= $topIndent.$tmpOutertext;
 			$headInnerText .= $topIndent.$boilerplate;
-			$headInnerText .= $topIndent.$ampproject_v0js;
+			$headInnerText .= $topIndent.$ampproject_js;
+			if( preg_match( '/\<amp\-iframe/s', $html_src ) ){
+				$headInnerText .= $topIndent.$ampproject_amp_iframe;
+			}
+			if( preg_match( '/\<amp\-video/s', $html_src ) ){
+				$headInnerText .= $topIndent.$ampproject_amp_video;
+			}
+			if( preg_match( '/\<amp\-audio/s', $html_src ) ){
+				$headInnerText .= $topIndent.$ampproject_amp_audio;
+			}
 			$headInnerText .= $head->innertext;
 			$head->innertext = $headInnerText;
 

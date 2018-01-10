@@ -27,6 +27,7 @@ echo $amp;
 - http-equiv属性を持ったmeta要素が削除されます。
 - head要素に `style[amp-boilerplate]` が追加されます。
 - head要素に `<script async src="https://cdn.ampproject.org/v0.js"></script>` が追加されます。
+- amp-iframe, amp-audio, amp-video の各要素が検出されるとき、head要素にそれぞれ必要な JavaScript ライブラリが追加されます。
 - style要素に、 amp-custom属性が追加されます。 style要素が複数検出される場合は、1つに統合されます。
 - JSON-LD形式以外の script要素が削除されます。
 - 条件付きコメント(例： `<!--[if IE 6]>`)が削除されます。
