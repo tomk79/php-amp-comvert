@@ -123,13 +123,28 @@ class AMPConverter{
 		$simple_html_dom = $this->create_simple_html_dom($html_src);
 
 		$ret = $simple_html_dom->find('style');
+		$stylesheet_contents = '';
 		foreach( $ret as $style ){
 			if( $style->attr['amp-boilerplate'] ){
 				// boilerplateは残す
 				continue;
 			}
 
+			$stylesheet_contents .= $style->innertext;
 			$style->attr['amp-custom'] = true;
+		}
+		foreach( $ret as $style ){
+			if( $style->attr['amp-boilerplate'] ){
+				// boilerplateは残す
+				continue;
+			}
+
+			if( strlen($stylesheet_contents) ){
+				$style->innertext = $stylesheet_contents;
+				$stylesheet_contents = '';
+			}else{
+				$style->outertext = '';
+			}
 		}
 
 		return $simple_html_dom->outertext;
