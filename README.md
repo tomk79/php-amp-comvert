@@ -27,6 +27,7 @@ echo $amp;
 - http-equiv属性を持ったmeta要素が削除されます。
 - head要素に `style[amp-boilerplate]` が追加されます。
 - head要素に `<script async src="https://cdn.ampproject.org/v0.js"></script>` が追加されます。
+- style要素に、 amp-custom属性が追加されます。
 - JSON-LD形式以外の script要素が削除されます。
 - body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
 
@@ -50,8 +51,6 @@ echo $amp;
 	- `amp-form` のライブラリを読み込む必要があります。
 - input
 	- type属性が `image`、 `button`、 `password`、 `file` は禁止されています。
-- style
-	- head要素内の style要素には、 `amp-custom` 属性を付けて下さい。
 - link
 	- rel属性には、 [microformats.org](http://microformats.org/) に登録されている値を指定できます。 ただし、 `stylesheet`(許可されたカスタムフォントを除く)、 `preconnect`、 `prerender`、 `prefetch` は禁止されています。
 - a

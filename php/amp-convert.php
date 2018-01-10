@@ -69,6 +69,9 @@ class AMPConverter{
 		// script要素をAMP変換する
 		$html = $this->convert_script_to_amp($html);
 
+		// style要素をAMP変換する
+		$html = $this->convert_style_to_amp($html);
+
 		// HTML要素に `amp` 属性を付加
 		$simple_html_dom = $this->create_simple_html_dom($html);
 		$ret = $simple_html_dom->find('html');
@@ -100,6 +103,28 @@ class AMPConverter{
 			}
 
 			$script->outertext = '';
+		}
+
+		return $simple_html_dom->outertext;
+	}
+
+	/**
+	 * style要素をAMP変換する
+	 * @param  string $html_src HTMLソース
+	 * @return string 変換されたHTMLソース
+	 */
+	private function convert_style_to_amp($html_src){
+		$html_src = preg_replace('/\<style\>/', '<style amp-custom>', $html_src);
+		$simple_html_dom = $this->create_simple_html_dom($html_src);
+
+		$ret = $simple_html_dom->find('style');
+		foreach( $ret as $style ){
+			if( $style->attr['amp-boilerplate'] ){
+				// boilerplateは残す
+				continue;
+			}
+
+			$style->attr['amp-custom'] = true;
 		}
 
 		return $simple_html_dom->outertext;
