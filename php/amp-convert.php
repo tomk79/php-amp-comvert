@@ -199,10 +199,22 @@ class AMPConverter{
 					$tmpRetRow->outertext = '';
 				}
 			}
+
+			// viewport を持つ meta 要素を先頭に移動
+			$tmpRet = @$head->find('meta[name=viewport]');
+			$viewport = '';
+			if( count($tmpRet) ){
+				$viewport = $tmpRet[0]->attr['content'];
+				foreach($tmpRet as $tmpRetRow){
+					$tmpRetRow->outertext = '';
+				}
+			}
+
 			$headInnerText = '';
 			$headInnerText .= $topIndent.$tmpOutertext;
 			$headInnerText .= $topIndent.$boilerplate;
 			$headInnerText .= $topIndent.$ampproject_js;
+			$headInnerText .= $topIndent.'<meta name="viewport" content="'.htmlspecialchars($this->organize_viewport($viewport)).'" />';
 			if( preg_match( '/\<amp\-iframe/s', $html_src ) ){
 				$headInnerText .= $topIndent.$ampproject_amp_iframe;
 			}
@@ -218,6 +230,34 @@ class AMPConverter{
 		}
 
 		return $simple_html_dom->outertext;
+	}
+
+	/**
+	 * viewport を調整する
+	 * @param  string $viewport 元のviewport値
+	 * @return string 整理し直されたviewport値
+	 */
+	private function organize_viewport( $viewport ){
+		$viewport_ary = array();
+		$tmp_viewport_ary = explode(',', $viewport);
+		foreach($tmp_viewport_ary as $tmp_viewport_row){
+			$tmp_viewport_row = trim($tmp_viewport_row);
+			if(!strlen($tmp_viewport_row)) {continue;}
+			list($tmp_key, $tmp_val) = explode('=', $tmp_viewport_row);
+			$viewport_ary[trim($tmp_key)] = trim($tmp_val);
+		}
+
+		// AMP仕様による固定値を強制指定
+		$viewport_ary['width'] = 'device-width';
+		$viewport_ary['minimum-scale'] = '1';
+
+		$tmp_viewport_ary = array();
+		foreach( $viewport_ary as $tmp_key=>$tmp_val ){
+			array_push($tmp_viewport_ary, $tmp_key.'='.$tmp_val);
+		}
+		$viewport = implode(',', $tmp_viewport_ary);
+		unset($tmp_viewport_ary, $tmp_viewport_row, $tmp_key, $tmp_val);
+		return $viewport;
 	}
 
 	/**

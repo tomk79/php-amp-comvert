@@ -27,6 +27,7 @@ echo $amp;
 - http-equiv属性を持ったmeta要素が削除されます。
 - head要素に `style[amp-boilerplate]` が追加されます。
 - head要素に `<script async src="https://cdn.ampproject.org/v0.js"></script>` が追加されます。
+- head要素に `<meta name="viewport" content="width=device-width,minimum-scale=1">` が追加されます。既に viewport が存在する場合は、 `width` が `device-width` に、 `minimum-scale` が `1` に強制的に上書きされ、そのほかの値がある場合は維持されます。
 - amp-iframe, amp-audio, amp-video の各要素が検出されるとき、head要素にそれぞれ必要な JavaScript ライブラリが追加されます。
 - style要素に、 amp-custom属性が追加されます。 style要素が複数検出される場合は、1つに統合されます。
 - JSON-LD形式以外の script要素が削除されます。
@@ -39,7 +40,7 @@ echo $amp;
 
 - 通常ページの `rel=amphtml` の link要素の href属性は、AMPページのURLを指定してください。
 - AMPページの `rel=canonical` の link要素の href属性は、通常ページのURLを指定してください。存在しなければ自身(AMPページ)のURLを指定します。
-- head要素に `<meta name="viewport" content="width=device-width,minimum-scale=1">` を含めてください。 `initial-scale=1` を加えることが推奨されます。
+- head要素 の viewport に `initial-scale=1` を加えることが推奨されます。
 - オープングラフ や Twitterカード の meta要素を 含めることが推奨されます。
 - スタイルシートは style要素に amp-custom属性 を付けてインラインで記述してください。 50KBを超えない範囲で、スタイルシートの制限事項を違反しないようにします。
 - 外部のスタイルシートはカスタムフォントを利用する以外では読み込めません。
