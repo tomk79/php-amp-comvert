@@ -21,37 +21,25 @@ class mainTest extends PHPUnit_Framework_TestCase{
 	 */
 	public function testMain(){
 
-		$html = file_get_contents(__DIR__.'/testdata/part.html');
-		$ampConv = new tomk79\ampConvert\AMPConverter();
+		$html_file_list = array(
+			'part',
+			'full',
+			'full_min',
+		);
 
-		$result = $ampConv->load($html);
-		$this->assertTrue( $result );
+		foreach($html_file_list as $html_file_name){
+			$html = file_get_contents(__DIR__.'/testdata/'.$html_file_name.'.html');
+			$ampConv = new tomk79\ampConvert\AMPConverter();
 
-		$amp = $ampConv->convert();
-		// var_dump($amp);
-		$this->fs->save_file( __DIR__.'/testoutput/part.html', $amp );
+			$result = $ampConv->load($html);
+			$this->assertTrue( $result );
 
-		$this->assertTrue( gettype($amp) == gettype('') );
+			$amp = $ampConv->convert();
+			// var_dump($amp);
+			$this->fs->save_file( __DIR__.'/testdata/'.$html_file_name.'.amp.html', $amp );
 
-
-		$html = file_get_contents(__DIR__.'/testdata/full.html');
-		$result = $ampConv->load($html);
-		$this->assertTrue( $result );
-
-		$amp = $ampConv->convert($html);
-		// var_dump($amp);
-		$this->fs->save_file( __DIR__.'/testoutput/full.html', $amp );
-
-		$html = file_get_contents(__DIR__.'/testdata/full_min.html');
-		$result = $ampConv->load($html);
-		$this->assertTrue( $result );
-
-		$amp = $ampConv->convert($html);
-		// var_dump($amp);
-		$this->fs->save_file( __DIR__.'/testoutput/full_min.html', $amp );
-
-		$this->assertTrue( gettype($amp) == gettype('') );
-
+			$this->assertTrue( gettype($amp) == gettype('') );
+		}
 
 	}//testMain()
 
