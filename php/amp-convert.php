@@ -96,11 +96,11 @@ class AMPConverter{
 
 		$ret = $simple_html_dom->find('script');
 		foreach( $ret as $script ){
-			if( $script->attr['type'] == 'application/ld+json' ){
+			if( @$script->attr['type'] == 'application/ld+json' ){
 				// JSON-LD情報は残す
 				continue;
 			}
-			if( $script->attr['async'] && preg_match('/^'.preg_quote('https://cdn.ampproject.org/', '/').'.*/', $script->attr['src']) ){
+			if( @$script->attr['async'] && preg_match('/^'.preg_quote('https://cdn.ampproject.org/', '/').'.*/', @$script->attr['src'].'') ){
 				// AMPが要求するJSは残す
 				continue;
 			}
@@ -125,7 +125,7 @@ class AMPConverter{
 		$ret = $simple_html_dom->find('style');
 		$stylesheet_contents = '';
 		foreach( $ret as $style ){
-			if( $style->attr['amp-boilerplate'] ){
+			if( @$style->attr['amp-boilerplate'] ){
 				// boilerplateは残す
 				continue;
 			}
@@ -134,7 +134,7 @@ class AMPConverter{
 			$style->attr['amp-custom'] = true;
 		}
 		foreach( $ret as $style ){
-			if( $style->attr['amp-boilerplate'] ){
+			if( @$style->attr['amp-boilerplate'] ){
 				// boilerplateは残す
 				continue;
 			}
@@ -204,7 +204,7 @@ class AMPConverter{
 			$tmpRet = @$head->find('meta[name=viewport]');
 			$viewport = '';
 			if( count($tmpRet) ){
-				$viewport = $tmpRet[0]->attr['content'];
+				$viewport = @$tmpRet[0]->attr['content'];
 				foreach($tmpRet as $tmpRetRow){
 					$tmpRetRow->outertext = '';
 				}
@@ -214,7 +214,7 @@ class AMPConverter{
 			$headInnerText .= $topIndent.$tmpOutertext;
 			$headInnerText .= $topIndent.$boilerplate;
 			$headInnerText .= $topIndent.$ampproject_js;
-			$headInnerText .= $topIndent.'<meta name="viewport" content="'.htmlspecialchars($this->organize_viewport($viewport)).'" />';
+			$headInnerText .= $topIndent.'<meta name="viewport" content="'.htmlspecialchars($this->optimize_viewport($viewport)).'" />';
 			if( preg_match( '/\<amp\-iframe/s', $html_src ) ){
 				$headInnerText .= $topIndent.$ampproject_amp_iframe;
 			}
@@ -237,7 +237,7 @@ class AMPConverter{
 	 * @param  string $viewport 元のviewport値
 	 * @return string 整理し直されたviewport値
 	 */
-	private function organize_viewport( $viewport ){
+	private function optimize_viewport( $viewport ){
 		$viewport_ary = array();
 		$tmp_viewport_ary = explode(',', $viewport);
 		foreach($tmp_viewport_ary as $tmp_viewport_row){
