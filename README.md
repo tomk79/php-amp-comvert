@@ -34,7 +34,7 @@ echo $amp;
 - `link[rel=stylesheet]` の参照するCSSが `style[amp-custom]` に結合されます。(ただし、`url()` や `@import` 等で参照されたファイルは結合されません)
 - 条件付きコメント(例： `<!--[if IE 6]>`)が削除されます。
 - body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
-- img要素が amp-img要素に置き換えられます。ただし、`width` や `height` などの属性値は操作されません。予め記述しておく必要があります。
+- img要素が amp-img要素に置き換えられます。画像ファイルの実体を参照可能な場合は、 `width` 、 `height` の属性を補完します。
 
 ### 自動的に変換されない項目
 

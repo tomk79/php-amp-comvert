@@ -290,6 +290,17 @@ class AMPConverter{
 		$imgs = $simple_html_dom->find('img');
 		foreach( $imgs as $img ){
 			$img->tag = 'amp-img';
+			if( !is_callable($this->convert_options['read_file']) || !is_callable('getimagesizefromstring') ){
+				continue;
+			}
+			$file_content = call_user_func($this->convert_options['read_file'], $img->attr['src']);
+			$image_info = getimagesizefromstring($file_content);
+			if(!@strlen($img->attr['width']) && @$image_info[0]){
+				$img->attr['width'] = $image_info[0];
+			}
+			if(!@strlen($img->attr['height']) && @$image_info[1]){
+				$img->attr['height'] = $image_info[0];
+			}
 		}
 		$html_src = $simple_html_dom->outertext;
 
