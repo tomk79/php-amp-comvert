@@ -28,6 +28,8 @@
     "autoload": {
         "files": [
             "php/amp-convert.php",
+            "php/extract_linked_outernal_css.php",
+            "php/utils.php",
             "php/simple_html_dom.php"
         ]
     }

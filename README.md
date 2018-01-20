@@ -31,6 +31,7 @@ echo $amp;
 - amp-iframe, amp-audio, amp-video の各要素が検出されるとき、head要素にそれぞれ必要な JavaScript ライブラリが追加されます。
 - style要素に、 amp-custom属性が追加されます。 style要素が複数検出される場合は、1つに統合されます。
 - JSON-LD形式以外の script要素が削除されます。
+- `link[rel=stylesheet]` の参照するCSSが `style[amp-custom]` に結合されます。(ただし、`url()` や `@import` 等で参照されたファイルは結合されません)
 - 条件付きコメント(例： `<!--[if IE 6]>`)が削除されます。
 - body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
 
@@ -42,7 +43,7 @@ echo $amp;
 - AMPページの `rel=canonical` の link要素の href属性は、通常ページのURLを指定してください。存在しなければ自身(AMPページ)のURLを指定します。
 - head要素 の viewport に `initial-scale=1` を加えることが推奨されます。
 - オープングラフ や Twitterカード の meta要素を 含めることが推奨されます。
-- スタイルシートは style要素に amp-custom属性 を付けてインラインで記述してください。 50KBを超えない範囲で、スタイルシートの制限事項を違反しないようにします。
+- スタイルシートは、50KB以内におさめてください。
 - 外部のスタイルシートはカスタムフォントを利用する以外では読み込めません。
 
 ### 要素
@@ -68,75 +69,16 @@ echo $amp;
 
 ### 属性
 
-- style属性は使用できない。
-- `xml:lang`、 `xml:base` など、XML関連の属性は使用できない。
-- `onclick`、 `onchange` など、onで始まる全ての属性は使用できない。
-- id属性、class属性では、 `-amp-`、 または `i-amp-` を含む値は使用できない。ただし、一部のコンポーネントではカスタマイズが許可される場合がある。
+- `xml:lang`、 `xml:base` など、XML関連の属性は使用できません。
+- `onclick`、 `onchange` など、onで始まる全ての属性は使用できません。
+- id属性、class属性では、 `-amp-`、 または `i-amp-` を含む値は使用できません。(ただし、一部のコンポーネントではカスタマイズが許可される場合があります)
 
 ### スタイルシート
 
-- style要素には `amp-custom` 属性を付けなければいけない。
-- スタイルシートの内容は、50,000byte(50KB)以内に抑えなければいけない。
-- `@-rules` は、 `@font-face`、 `@keyframes`、 `@media`、 `@supports` 以外は使用できない。
-- 修飾子の `!important` は使用できない。
-- behaviorプロパティ、 `-moz-binding` プロパティ、 `filter` プロパティは使用できない。
-- `overflow`、 `overflow-x`、 `overflow-y` に `auto`、 `scroll` を指定してはいけない。AMPでは、ユーザーがコンテンツにスクロールバーを持たすことができない。
-
-### AMPコンポーネント
-
-- amp-access
-- amp-access-laterpay
-- amp-accordion
-- amp-ad
-- amp-analytics
-- amp-anim
-- amp-animation
-- amp-apester-media
-- amp-app-banner
-- amp-bind
-- amp-brid-player
-- amp-brightcove
-- amp-carousel
-- amp-dailymotion
-- amp-dynamic-css-classes
-- amp-experiment
-- amp-facebook
-- amp-fit-text
-- amp-font
-- amp-form
-- amp-fx-flying-carpet
-- amp-gfycat
-- amp-google-vrview-image
-- amp-hulu
-- amp-image-lightbox
-- amp-instagram
-- amp-install-serviceworker
-- amp-jwplayer
-- amp-kaltura-player
-- amp-lightbox
-- amp-list
-- amp-live-list
-- amp-mustache
-- amp-o2-player
-- amp-ooyala-player
-- amp-pinterest
-- amp-pixel
-- amp-playbuzz
-- amp-reach-player
-- amp-reddit
-- amp-selector
-- amp-share-tracking
-- amp-sidebar
-- amp-social-share
-- amp-soundcloud
-- amp-springboard-player
-- amp-sticky-ad
-- amp-twitter
-- amp-user-notification
-- amp-vimeo
-- amp-vine
-- amp-viz-vega
-- amp-youtube
+- `@-rules` は、 `@font-face`、 `@keyframes`、 `@media`、 `@supports` 以外は使用できません。
+- 修飾子の `!important` は使用できません。
+- behaviorプロパティ、 `-moz-binding` プロパティ、 `filter` プロパティは使用できません。
+- `overflow`、 `overflow-x`、 `overflow-y` に `auto`、 `scroll` を指定してはいけない。AMPでは、ユーザーがコンテンツにスクロールバーを持たすことができません。
 
 
 ## 更新履歴 - Change log

@@ -34,7 +34,12 @@ class mainTest extends PHPUnit_Framework_TestCase{
 			$result = $ampConv->load($html);
 			$this->assertTrue( $result );
 
-			$amp = $ampConv->convert();
+			$amp = $ampConv->convert(array(
+				'read_file'=>function($path){
+					if(!is_file(__DIR__.'/testdata/'.$path)){return false;}
+					return file_get_contents(__DIR__.'/testdata/'.$path);
+				}
+			));
 			// var_dump($amp);
 			$this->fs->save_file( __DIR__.'/testdata/'.$html_file_name.'.amp.html', $amp );
 

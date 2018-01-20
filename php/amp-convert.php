@@ -15,16 +15,23 @@ class AMPConverter{
 	/** 加工前のオリジナル HTMLコード */
 	private $html_original;
 
+	/** 変換オプション */
+	private $convert_options;
+
+	/** ユーティリティ */
+	private $utils;
+
 	/**
 	 * コストラクタ
 	 */
 	public function __construct(){
+		$this->utils = new utils();
 	}
 
 	/**
 	 * HTMLコードを読み込む
-	 * @param  String $html HTMLソースコード
-	 * @return Boolean 常に `true`
+	 * @param  string $html HTMLソースコード
+	 * @return boolean 常に `true`
 	 */
 	public function load($html){
 		$this->html_original = $html;
@@ -32,29 +39,16 @@ class AMPConverter{
 	}
 
 	/**
-	 * Simple HTML DOM オブジェクトを生成する
-	 * @param  string $src HTMLソースコード
-	 * @return object Simple HTML DOM オブジェクト
-	 */
-	private function create_simple_html_dom( $src ){
-		// Simple HTML DOM
-		$simple_html_dom = str_get_html(
-			$src ,
-			true, // $lowercase
-			true, // $forceTagsClosed
-			DEFAULT_TARGET_CHARSET, // $target_charset
-			false, // $stripRN
-			DEFAULT_BR_TEXT, // $defaultBRText
-			DEFAULT_SPAN_TEXT // $defaultSpanText
-		);
-		return $simple_html_dom;
-	}
-
-	/**
 	 * 変換を実行する
+	 * @param  array $options オプション
 	 * @return string AMP変換後のソースコード
 	 */
-	public function convert(){
+	public function convert($options = array()){
+		if(!is_array($options)){
+			$options = array();
+		}
+		$this->convert_options = $options;
+
 		$html = $this->html_original;
 
 		// DOCTYPE を書き換える
@@ -76,7 +70,7 @@ class AMPConverter{
 		$html = $this->remove_conditional_comment($html);
 
 		// HTML要素に `amp` 属性を付加
-		$simple_html_dom = $this->create_simple_html_dom($html);
+		$simple_html_dom = $this->utils->create_simple_html_dom($html);
 		$ret = $simple_html_dom->find('html');
 		foreach( $ret as $retRow ){
 			$retRow->amp = true;
@@ -92,7 +86,7 @@ class AMPConverter{
 	 * @return string 変換されたHTMLソース
 	 */
 	private function convert_script_to_amp($html_src){
-		$simple_html_dom = $this->create_simple_html_dom($html_src);
+		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
 
 		$ret = $simple_html_dom->find('script');
 		foreach( $ret as $script ){
@@ -119,11 +113,19 @@ class AMPConverter{
 	private function convert_style_to_amp($html_src){
 		// 先にこれをしておかないと、style の後にスペースが入らない (Simple HTML DOM のバグ？)
 		$html_src = preg_replace('/\<style\>/', '<style amp-custom>', $html_src);
+		$stylesheet_contents = '';
 
-		$simple_html_dom = $this->create_simple_html_dom($html_src);
+		$extract_linked_outernal_css = new extract_linked_outernal_css($this->utils, $this->convert_options);
+		$stylesheet_contents .= $extract_linked_outernal_css->extract($html_src);
+
+		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
+
+		$ret = $simple_html_dom->find('link[rel=stylesheet]');
+		foreach( $ret as $link ){
+			$link->outertext = '';
+		}
 
 		$ret = $simple_html_dom->find('style');
-		$stylesheet_contents = '';
 		foreach( $ret as $style ){
 			if( @$style->attr['amp-boilerplate'] ){
 				// boilerplateは残す
@@ -166,7 +168,7 @@ class AMPConverter{
 	 * @return string 変換されたHTMLソース
 	 */
 	private function convert_head_to_amp($html_src){
-		$simple_html_dom = $this->create_simple_html_dom($html_src);
+		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
 
 		$ampproject_js = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0js.html'));
 		$ampproject_amp_iframe = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0_amp_iframe.html'));
@@ -266,7 +268,7 @@ class AMPConverter{
 	 * @return string 変換されたHTMLソース
 	 */
 	private function convert_body_to_amp($html_src){
-		$simple_html_dom = $this->create_simple_html_dom($html_src);
+		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
 
 		$ret = $simple_html_dom->find('body');
 		if(count($ret)){
