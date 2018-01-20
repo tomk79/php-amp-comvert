@@ -296,10 +296,10 @@ class AMPConverter{
 			$file_content = call_user_func($this->convert_options['read_file'], $img->attr['src']);
 			$image_info = getimagesizefromstring($file_content);
 			if(!@strlen($img->attr['width']) && @$image_info[0]){
-				$img->attr['width'] = $image_info[0];
+				$img->attr[' width'] = $image_info[0].'';
 			}
 			if(!@strlen($img->attr['height']) && @$image_info[1]){
-				$img->attr['height'] = $image_info[0];
+				$img->attr[' height'] = $image_info[1].'';
 			}
 		}
 		$html_src = $simple_html_dom->outertext;
