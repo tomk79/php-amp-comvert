@@ -174,6 +174,7 @@ class AMPConverter{
 	private function convert_head_to_amp($html_src){
 		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
 
+		$title = '';
 		$ampproject_js = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0js.html'));
 		$ampproject_amp_iframe = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0_amp_iframe.html'));
 		$ampproject_amp_video = trim(file_get_contents(__DIR__.'/../resources/ampproject_v0_amp_video.html'));
@@ -187,6 +188,13 @@ class AMPConverter{
 		}
 		foreach( $ret as $head ){
 			$topIndent = preg_replace('/^(\s*)(.*?)$/s', '$1', $head->innertext);
+
+			// title
+			$tmpRet = $head->find('title');
+			foreach($tmpRet as $tmpRetRow){
+				$title .= $tmpRetRow->innertext;
+				$tmpRetRow->outertext = '';
+			}
 
 			// `http-equiv` を持つ meta 要素を削除
 			$tmpRet = $head->find('meta[http-equiv]');
@@ -218,6 +226,7 @@ class AMPConverter{
 
 			$headInnerText = '';
 			$headInnerText .= $topIndent.$tmpOutertext;
+			$headInnerText .= $topIndent.'<title>'.$title.'</title>';
 			$headInnerText .= $topIndent.$boilerplate;
 			$headInnerText .= $topIndent.$ampproject_js;
 			$headInnerText .= $topIndent.'<meta name="viewport" content="'.htmlspecialchars($this->optimize_viewport($viewport)).'" />';
@@ -230,6 +239,7 @@ class AMPConverter{
 			if( preg_match( '/\<amp\-audio/s', $html_src ) ){
 				$headInnerText .= $topIndent.$ampproject_amp_audio;
 			}
+			$headInnerText .= $topIndent.'<style></style>'; // link[rel=stylesheet] があって style がない場合のために、器を用意する
 			$headInnerText .= $head->innertext;
 			$head->innertext = $headInnerText;
 

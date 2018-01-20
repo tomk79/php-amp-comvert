@@ -25,6 +25,7 @@ class mainTest extends PHPUnit_Framework_TestCase{
 			'part',
 			'full',
 			'full_min',
+			'full_linkcss_nostyle',
 		);
 
 		foreach($html_file_list as $html_file_name){
