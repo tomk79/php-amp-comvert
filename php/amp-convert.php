@@ -135,6 +135,9 @@ class AMPConverter{
 			$stylesheet_contents .= $style->innertext;
 			$style->attr['amp-custom'] = true;
 		}
+
+		$stylesheet_contents = preg_replace('/\@charset\s+(\"|\')[a-zA-Z0-9\_\-]+\1\s*\;?/s', '', $stylesheet_contents);
+
 		foreach( $ret as $style ){
 			if( @$style->attr['amp-boilerplate'] ){
 				// boilerplateは残す
@@ -149,7 +152,8 @@ class AMPConverter{
 			}
 		}
 
-		return $simple_html_dom->outertext;
+		$html_src = $simple_html_dom->outertext;
+		return $html_src;
 	}
 
 	/**

@@ -32,6 +32,7 @@ echo $amp;
 - style要素に、 amp-custom属性が追加されます。 style要素が複数検出される場合は、1つに統合されます。
 - JSON-LD形式以外の script要素が削除されます。
 - `link[rel=stylesheet]` の参照するCSSが `style[amp-custom]` に結合されます。(ただし、`url()` や `@import` 等で参照されたファイルは結合されません)
+- style要素中の `@charset` ルールが削除されます。
 - 条件付きコメント(例： `<!--[if IE 6]>`)が削除されます。
 - body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
 - img要素が amp-img要素に置き換えられます。画像ファイルの実体を参照可能な場合は、 `width` 、 `height` の属性を補完します。
