@@ -284,8 +284,16 @@ class AMPConverter{
 			$amp->loadHtml($simple_html_dom->outertext);
 			$simple_html_dom->outertext = $amp->convertToAmpHtml();
 		}
+		$html_src = $simple_html_dom->outertext;
 
-		return $simple_html_dom->outertext;
+		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
+		$imgs = $simple_html_dom->find('img');
+		foreach( $imgs as $img ){
+			$img->tag = 'amp-img';
+		}
+		$html_src = $simple_html_dom->outertext;
+
+		return $html_src;
 	}
 
 }
