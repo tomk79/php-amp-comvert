@@ -315,6 +315,7 @@ class AMPConverter{
 			if(!@strlen($img->attr['height']) && @$image_info[1]){
 				$img->attr[' height'] = $image_info[1].'';
 			}
+			$img->outertext .= '</amp-img>';
 		}
 		$html_src = $simple_html_dom->outertext;
 
