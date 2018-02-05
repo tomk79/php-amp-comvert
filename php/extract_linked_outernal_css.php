@@ -40,7 +40,14 @@ class extract_linked_outernal_css{
 		foreach( $ret as $link ){
 			$path = $link->attr['href'];
 			$file_content = call_user_func($this->convert_options['read_file'], $path);
-			// ひとまず: 開いたファイルをそのまま結合する。
+
+			// !important を削除
+			$file_content = preg_replace('/\s+\!important/s', '', $file_content);
+
+			// CSSコメントを削除
+			$file_content = preg_replace('/\/\*.*?\*\//s', '', $file_content);
+
+			// ひとまずそのまま結合する。
 			// TODO: url() や import() などを検索し、再帰的にファイルを取得して結合する
 			$rtn .= $file_content;
 		}

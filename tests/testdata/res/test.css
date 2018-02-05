@@ -1,4 +1,19 @@
 @charset "utf-8";
+/*
+CSS Comment
+*/
 .test{
-    color: #f63;
+    color: #009;
+}
+/*
+CSS Comment 2
+*/
+.test2{
+    color: #396 !important; /* comment */
+}
+/*
+CSS Comment
+*/
+.test{
+    color: #f63 !important; /* important */
 }

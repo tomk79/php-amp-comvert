@@ -32,7 +32,7 @@ echo $amp;
 - style要素に、 amp-custom属性が追加されます。 style要素が複数検出される場合は、1つに統合されます。
 - JSON-LD形式以外の script要素が削除されます。
 - `link[rel=stylesheet]` の参照するCSSが `style[amp-custom]` に結合されます。(ただし、`url()` や `@import` 等で参照されたファイルは結合されません)
-- style要素中の `@charset` ルールが削除されます。
+- style要素中の `@charset`、 `!important`、 CSSコメント(`/* 〜 */`) が削除されます。
 - 条件付きコメント(例： `<!--[if IE 6]>`)が削除されます。
 - body要素の内容が [lullabot/amp](https://packagist.org/packages/lullabot/amp) で変換されます。
 - img要素が amp-img要素に置き換えられます。画像ファイルの実体を参照可能な場合は、 `width` 、 `height` の属性を補完します。
@@ -70,7 +70,6 @@ echo $amp;
 ### 属性
 
 - `xml:lang`、 `xml:base` など、XML関連の属性は使用できません。
-- `onclick`、 `onchange` など、onで始まる全ての属性は使用できません。
 - id属性、class属性では、 `-amp-`、 または `i-amp-` を含む値は使用できません。(ただし、一部のコンポーネントではカスタマイズが許可される場合があります)
 
 ### スタイルシート
