@@ -17,9 +17,9 @@ class mainTest extends PHPUnit_Framework_TestCase{
 	}
 
 	/**
-	 * 変換を実行してみる
+	 * 変換を実行する
 	 */
-	public function testMain(){
+	public function testDoConvert(){
 
 		$html_file_list = array(
 			'part',
@@ -47,6 +47,20 @@ class mainTest extends PHPUnit_Framework_TestCase{
 			$this->assertTrue( gettype($amp) == gettype('') );
 		}
 
-	}//testMain()
+	} // testDoConvert()
+
+	/**
+	 * 変換結果をチェックする
+	 */
+	public function testCheckOutput(){
+		$path_base = __DIR__.'/testdata/';
+
+		$html = file_get_contents($path_base.'full.amp.html');
+		$this->assertSame( preg_match('/'.preg_quote('"@context": "http://schema.org"', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('"dataType": "application/json"', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('"dataType": "text/json"', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('console.log(\'Normal JavaScript code.\');', '/').'/s', $html), 0 );
+
+	} // testCheckOutput()
 
 }

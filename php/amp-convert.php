@@ -90,11 +90,33 @@ class AMPConverter{
 
 		$ret = $simple_html_dom->find('script');
 		foreach( $ret as $script ){
-			if( @$script->attr['type'] == 'application/ld+json' ){
+			if( !is_object($script) ){ continue; }
+			$tmpType = null;
+			if(array_key_exists('type', $script->attr)){
+				$tmpType = $script->attr['type'];
+			}
+			if( $tmpType == 'application/ld+json' ){
 				// JSON-LD情報は残す
 				continue;
 			}
-			if( @$script->attr['async'] && preg_match('/^'.preg_quote('https://cdn.ampproject.org/', '/').'.*/', @$script->attr['src'].'') ){
+			if( $tmpType == 'application/json' ){
+				// JSONは残す (実行できない形式のデータは許容される)
+				continue;
+			}
+			if( $tmpType == 'text/json' ){
+				// JSONは残す (実行できない形式のデータは許容される)
+				continue;
+			}
+
+			$tmpAsync = null;
+			if(array_key_exists('async', $script->attr)){
+				$tmpAsync = $script->attr['async'];
+			}
+			$tmpSrc = null;
+			if(array_key_exists('src', $script->attr)){
+				$tmpSrc = $script->attr['src'];
+			}
+			if( $tmpAsync && preg_match('/^'.preg_quote('https://cdn.ampproject.org/', '/').'.*/', $tmpSrc.'') ){
 				// AMPが要求するJSは残す
 				continue;
 			}

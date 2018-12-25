@@ -30,7 +30,7 @@ echo $amp;
 - head要素に `<meta name="viewport" content="width=device-width,minimum-scale=1">` が追加されます。既に viewport が存在する場合は、 `width` が `device-width` に、 `minimum-scale` が `1` に強制的に上書きされ、そのほかの値がある場合は維持されます。
 - amp-iframe, amp-audio, amp-video の各要素が検出されるとき、head要素にそれぞれ必要な JavaScript ライブラリが追加されます。
 - style要素に、 amp-custom属性が追加されます。 style要素が複数検出される場合は、1つに統合されます。
-- JSON-LD形式以外の script要素が削除されます。
+- type属性が `application/ld+json` (JSON-LD形式)、`application/json` および `text/json` 以外の script要素が削除されます。
 - `link[rel=stylesheet]` の参照するCSSが `style[amp-custom]` に結合されます。(ただし、`url()` や `@import` 等で参照されたファイルは結合されません)
 - style要素中の `@charset`、 `!important`、 CSSコメント(`/* 〜 */`) が削除されます。
 - 条件付きコメント(例： `<!--[if IE 6]>`)が削除されます。
@@ -82,7 +82,20 @@ echo $amp;
 
 ## 更新履歴 - Change log
 
-### tomk79/amp-convert dev-develop (2018年??月??日)
+### tomk79/amp-convert v0.1.3 (リリース日未定)
+
+- type属性が `application/json`, `text/json` の scriptタグを削除しないようになった。
+
+### tomk79/amp-convert v0.1.2 (2018年2月6日)
+
+- amp-imgの変換方式を変更し、 `layout=responsive` が付加されるようになった。
+
+### tomk79/amp-convert v0.1.1 (2018年2月5日)
+
+- CSS中の `!important`、 CSSコメント(`/* 〜 */`) を削除するようになった。
+- パースエラーが起きることがある不具合を修正。
+
+### tomk79/amp-convert v0.1.0 (2018年2月4日)
 
 - Initial release.
 
