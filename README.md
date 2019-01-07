@@ -82,7 +82,7 @@ echo $amp;
 
 ## 更新履歴 - Change log
 
-### tomk79/amp-convert v0.1.3 (リリース日未定)
+### tomk79/amp-convert v0.1.3 (2019年1月7日)
 
 - type属性が `application/json`, `text/json` の scriptタグを削除しないようになった。
 
