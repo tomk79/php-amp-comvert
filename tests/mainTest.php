@@ -36,9 +36,15 @@ class mainTest extends PHPUnit_Framework_TestCase{
 			$this->assertTrue( $result );
 
 			$amp = $ampConv->convert(array(
-				'read_file'=>function($path){
-					if(!is_file(__DIR__.'/testdata/'.$path)){return false;}
-					return file_get_contents(__DIR__.'/testdata/'.$path);
+				'read_file'=>function($path) use ($html_file_name){
+					$realpath = null;
+					if( preg_match('/^\//', $path) ){
+						$realpath = __DIR__.'/testdata/'.preg_replace('/^\/+/', '', $path);
+					}else{
+						$realpath = __DIR__.'/testdata/'.dirname($html_file_name.'.html').'/'.$path;
+					}
+					if(!is_file($realpath)){return false;}
+					return file_get_contents($realpath);
 				}
 			));
 			// var_dump($amp);
