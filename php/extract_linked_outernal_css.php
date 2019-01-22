@@ -74,7 +74,7 @@ class extract_linked_outernal_css{
 	private function process_url($src, $path){
 		$rtn = '';
 		while(1){
-			if( !preg_match('/^(.*?)(\@import\s+)?url\(\s*(\'|\"|)(.*?)\3\s*\)\s*\;(.*)$/s', $src, $matched) ){
+			if( !preg_match('/^(.*?)(?:(\@import\s+)?url\(\s*(\'|\"|)(.*?)\3\s*\)|\@import\s+(\'|\")(.*?)\5)\s*\;(.*)$/s', $src, $matched) ){
 				$rtn .= $src;
 				break;
 			}
@@ -83,7 +83,12 @@ class extract_linked_outernal_css{
 			$import = trim($matched[2]);
 			$delimiter = $matched[3];
 			$link = trim($matched[4]);
-			$src = $matched[5];
+			if( !strlen($import) && !strlen($delimiter) && !strlen($link) ){
+				$import = '@import';
+				$delimiter = $matched[5];
+				$link = trim($matched[6]);
+			}
+			$src = $matched[7];
 
 			// var_dump($link);
 
