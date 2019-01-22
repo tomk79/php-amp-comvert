@@ -30,6 +30,7 @@ echo $amp;
 - head要素に `<meta name="viewport" content="width=device-width,minimum-scale=1">` が追加されます。既に viewport が存在する場合は、 `width` が `device-width` に、 `minimum-scale` が `1` に強制的に上書きされ、そのほかの値がある場合は維持されます。
 - amp-iframe, amp-audio, amp-video の各要素が検出されるとき、head要素にそれぞれ必要な JavaScript ライブラリが追加されます。
 - style要素に、 amp-custom属性が追加されます。 style要素が複数検出される場合は、1つに統合されます。
+- style属性を持つ要素がある場合、 class名 に変換し、 スタイルを style要素内に追記し、 class として参照するように書き換えます。
 - type属性が `application/ld+json` (JSON-LD形式)、`application/json` および `text/json` 以外の script要素が削除されます。
 - `link[rel=stylesheet]` の参照するCSSが `style[amp-custom]` に結合されます。(ただし、`url()` や `@import` 等で参照されたファイルは結合されません)
 - style要素中の `@charset`、 `!important`、 CSSコメント(`/* 〜 */`) が削除されます。
@@ -81,6 +82,11 @@ echo $amp;
 
 
 ## 更新履歴 - Change log
+
+### tomk79/amp-convert v0.1.4 (リリース日未定)
+
+- style属性を持つ要素がある場合、 class名 に変換し、 スタイルを style要素内に追記し、 class として参照するように書き換えるようになった。
+- `$ampConv->get_style_attribute_collection()` を追加。
 
 ### tomk79/amp-convert v0.1.3 (2019年1月7日)
 

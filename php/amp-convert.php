@@ -21,6 +21,9 @@ class AMPConverter{
 	/** ユーティリティ */
 	private $utils;
 
+	/** style属性値のコレクション */
+	private $style_attribute_collection = array();
+
 	/**
 	 * コストラクタ
 	 */
@@ -156,6 +159,11 @@ class AMPConverter{
 
 			$stylesheet_contents .= $style->innertext;
 			$style->attr['amp-custom'] = true;
+		}
+
+		foreach($this->style_attribute_collection as $class_name => $style){
+			// style属性から収集したスタイルを追加
+			$stylesheet_contents .= '.'.$class_name.'{'.$style.'}'."\n";
 		}
 
 		$stylesheet_contents = preg_replace('/\@charset\s+(\"|\')[a-zA-Z0-9\_\-]+\1\s*\;?/s', '', $stylesheet_contents);
@@ -304,6 +312,24 @@ class AMPConverter{
 	 * @return string 変換されたHTMLソース
 	 */
 	private function convert_body_to_amp($html_src){
+
+		// style属性をスキャン
+		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
+		$styleAttrs = $simple_html_dom->find('*[style]');
+		$this->style_attribute_collection = array();
+		foreach( $styleAttrs as $element ){
+			$tmp_css = $element->attr['style'];
+			$class_name = 'amp-style-attr-'.md5($tmp_css);
+			$this->style_attribute_collection[$class_name] = $tmp_css;
+			if(!@strlen($element->attr['class'])){
+				$element->attr[' class'] = $class_name;
+			}else{
+				$element->attr['class'] = implode(' ', array($element->attr['class'], $class_name));
+			}
+		}
+		$html_src = $simple_html_dom->outertext;
+
+		// img要素をスキャン
 		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
 		$imgs = $simple_html_dom->find('img');
 		foreach( $imgs as $img ){
@@ -339,6 +365,13 @@ class AMPConverter{
 		$html_src = $simple_html_dom->outertext;
 
 		return $html_src;
+	}
+
+	/**
+	 * style属性値のコレクションを取得する
+	 */
+	public function get_style_attribute_collection(){
+		return $this->style_attribute_collection;
 	}
 
 }

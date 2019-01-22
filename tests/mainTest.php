@@ -50,6 +50,9 @@ class mainTest extends PHPUnit_Framework_TestCase{
 			// var_dump($amp);
 			$this->fs->save_file( __DIR__.'/testdata/'.$html_file_name.'.amp.html', $amp );
 
+			$styleAttrCollection = $ampConv->get_style_attribute_collection();
+			$this->assertTrue( is_array($styleAttrCollection) );
+
 			$this->assertTrue( gettype($amp) == gettype('') );
 		}
 
