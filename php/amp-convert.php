@@ -57,20 +57,32 @@ class AMPConverter{
 		// DOCTYPE を書き換える
 		$html = preg_replace('/^(?:\s*\<!DOCTYPE.*?>)?/is', '<!DOCTYPE html>', $html);
 
+		set_time_limit(60);
+
 		// body要素をAMP変換する
 		$html = $this->convert_body_to_amp($html);
+
+		set_time_limit(60);
 
 		// head要素をAMP変換する
 		$html = $this->convert_head_to_amp($html);
 
+		set_time_limit(60);
+
 		// script要素をAMP変換する
 		$html = $this->convert_script_to_amp($html);
+
+		set_time_limit(60);
 
 		// style要素をAMP変換する
 		$html = $this->convert_style_to_amp($html);
 
+		set_time_limit(60);
+
 		// 条件付きコメントを削除する
 		$html = $this->remove_conditional_comment($html);
+
+		set_time_limit(60);
 
 		// HTML要素に `amp` 属性を付加
 		$simple_html_dom = $this->utils->create_simple_html_dom($html);
@@ -80,6 +92,7 @@ class AMPConverter{
 		}
 		$html = $simple_html_dom->outertext;
 
+		set_time_limit(30);
 		return $html;
 	}
 
