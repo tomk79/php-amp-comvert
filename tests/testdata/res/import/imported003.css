@@ -1,0 +1,4 @@
+@import url("sub/imported004.css");
+.imported003{
+    content: "imported003";
+}
