@@ -39,18 +39,73 @@ class extract_linked_outernal_css{
 		$ret = $simple_html_dom->find('link[rel=stylesheet]');
 		foreach( $ret as $link ){
 			$path = $link->attr['href'];
-			$file_content = call_user_func($this->convert_options['read_file'], $path);
-
-			// !important を削除
-			$file_content = preg_replace('/\s+\!important/s', '', $file_content);
-
-			// CSSコメントを削除
-			$file_content = preg_replace('/\/\*.*?\*\//s', '', $file_content);
-
-			// ひとまずそのまま結合する。
-			// TODO: url() や import() などを検索し、再帰的にファイルを取得して結合する
-			$rtn .= $file_content;
+			$rtn .= $this->import_css($path);
 		}
 		return $rtn;
 	}
+
+	/**
+	 * CSSファイルを読み込む
+	 */
+	private function import_css($path){
+		if( !preg_match('/\//s', $path) ){
+			$path = './'.$path;
+		}
+		$file_content = call_user_func($this->convert_options['read_file'], $path);
+		if( !is_string($file_content) || !strlen($file_content) ){
+			return '';
+		}
+
+		// !important を削除
+		$file_content = preg_replace('/\s+\!important/s', '', $file_content);
+
+		// CSSコメントを削除
+		$file_content = preg_replace('/\/\*.*?\*\//s', '', $file_content);
+
+		// @import句を処理する
+		$file_content = $this->process_import($file_content, $path);
+
+		// url() を処理する
+		$file_content = $this->process_url($file_content, $path);
+
+		return $file_content;
+	}
+
+	/**
+	 * @import句を処理する
+	 */
+	private function process_import($src, $path){
+		$rtn = '';
+		while(1){
+			if( !preg_match('/^(.*?)\@import\s+url\(\s*(\'|\"|)(.*?)\2\s*\)\s*\;(.*)$/s', $src, $matched) ){
+				$rtn .= $src;
+				break;
+			}
+
+			$rtn .= $matched[1];
+			$delimiter = $matched[2];
+			$link = trim($matched[3]);
+			$src = $matched[4];
+
+			// var_dump($link);
+
+			if( preg_match( '/^\//s', $link ) ){
+				$rtn .= $this->import_css($link);
+			}else{
+				$rtn .= $this->import_css(dirname($path).'/'.$link);
+			}
+
+			continue;
+		}
+		return $rtn;
+	}
+
+	/**
+	 * url() を処理する
+	 */
+	private function process_url($src, $path){
+		// TODO: url() を検索し、再帰的にファイルを取得して結合する
+		return $src;
+	}
+
 }
