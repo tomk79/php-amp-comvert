@@ -62,9 +62,6 @@ class extract_linked_outernal_css{
 		// CSSコメントを削除
 		$file_content = preg_replace('/\/\*.*?\*\//s', '', $file_content);
 
-		// @import句を処理する
-		$file_content = $this->process_import($file_content, $path);
-
 		// url() を処理する
 		$file_content = $this->process_url($file_content, $path);
 
@@ -72,40 +69,60 @@ class extract_linked_outernal_css{
 	}
 
 	/**
-	 * @import句を処理する
+	 * url() を処理する
 	 */
-	private function process_import($src, $path){
+	private function process_url($src, $path){
 		$rtn = '';
 		while(1){
-			if( !preg_match('/^(.*?)\@import\s+url\(\s*(\'|\"|)(.*?)\2\s*\)\s*\;(.*)$/s', $src, $matched) ){
+			if( !preg_match('/^(.*?)(\@import\s+)?url\(\s*(\'|\"|)(.*?)\3\s*\)\s*\;(.*)$/s', $src, $matched) ){
 				$rtn .= $src;
 				break;
 			}
 
 			$rtn .= $matched[1];
-			$delimiter = $matched[2];
-			$link = trim($matched[3]);
-			$src = $matched[4];
+			$import = trim($matched[2]);
+			$delimiter = $matched[3];
+			$link = trim($matched[4]);
+			$src = $matched[5];
 
 			// var_dump($link);
 
-			if( preg_match( '/^\//s', $link ) ){
-				$rtn .= $this->import_css($link);
+			if( strlen( $import ) ){
+				if( preg_match( '/^\//s', $link ) ){
+					$rtn .= $this->import_css($link);
+				}else{
+					$rtn .= $this->import_css(dirname($path).'/'.$link);
+				}
 			}else{
-				$rtn .= $this->import_css(dirname($path).'/'.$link);
+				$rtn .= 'url("';
+				if( preg_match( '/^(?:\/|[a-zA-Z0-9]+\:)/s', $link ) ){
+					$rtn .= $link;
+				}else{
+					$rtn .= $this->resolve_path( dirname($path).'/'.$link );
+				}
+				$rtn .= '");';
 			}
-
 			continue;
 		}
 		return $rtn;
 	}
 
 	/**
-	 * url() を処理する
+	 * パスを解決する
 	 */
-	private function process_url($src, $path){
-		// TODO: url() を検索し、再帰的にファイルを取得して結合する
-		return $src;
+	private function resolve_path($path){
+		$paths = explode('/', $path);
+		$rtn = array();
+		foreach($paths as $cur){
+			if( $cur == '..' ){
+				array_pop($rtn);
+			}elseif( $cur == '.' ){
+				continue;
+			}else{
+				array_push($rtn, $cur);
+			}
+		}
+		return implode('/', $rtn);
 	}
 
 }

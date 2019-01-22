@@ -21,7 +21,7 @@
         "lullabot/amp": "^1.1.2"
     },
     "require-dev": {
-        "tomk79/filesystem": "1.*" ,
+        "tomk79/filesystem": "^1.0" ,
         "phpunit/phpunit": "4.1.*" ,
         "phpdocumentor/phpdocumentor": "^2.9"
     },
