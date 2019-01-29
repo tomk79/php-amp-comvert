@@ -83,11 +83,11 @@ echo $amp;
 
 ## 更新履歴 - Change log
 
-### tomk79/amp-convert v0.1.4 (リリース日未定)
+### tomk79/amp-convert v0.1.4 (2019年1月29日)
 
 - style属性を持つ要素がある場合、 class名 に変換し、 スタイルを style要素内に追記し、 class として参照するように書き換えるようになった。
 - `$ampConv->get_style_attribute_collection()` を追加。
-- CSSの @import 句を読み込んで結合するようになった。
+- CSSの `@import` 句を読み込んで結合するようになった。
 
 ### tomk79/amp-convert v0.1.3 (2019年1月7日)
 
