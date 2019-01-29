@@ -330,9 +330,16 @@ class AMPConverter{
 		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
 		$styleAttrs = $simple_html_dom->find('*[style]');
 		$this->style_attribute_collection = array();
+		$class_num = 0;
+		$class_idxs = array();
 		foreach( $styleAttrs as $element ){
 			$tmp_css = $element->attr['style'];
-			$class_name = 'amp-style-attr-'.md5($tmp_css);
+			$class_idx = md5($tmp_css);
+			if( !array_key_exists($class_idx, $class_idxs) ){
+				$class_idxs[$class_idx] = $class_num ++;
+			}
+			$class_name = 'amp-css-'.$class_idxs[$class_idx];
+
 			$this->style_attribute_collection[$class_name] = $tmp_css;
 			if(!@strlen($element->attr['class'])){
 				$element->attr[' class'] = $class_name;

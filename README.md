@@ -83,6 +83,10 @@ echo $amp;
 
 ## 更新履歴 - Change log
 
+### tomk79/amp-convert v0.1.5 (リリース日未定)
+
+- インラインのstyle属性から生成される class 名が短くなった。
+
 ### tomk79/amp-convert v0.1.4 (2019年1月29日)
 
 - style属性を持つ要素がある場合、 class名 に変換し、 スタイルを style要素内に追記し、 class として参照するように書き換えるようになった。
