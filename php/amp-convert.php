@@ -24,6 +24,16 @@ class AMPConverter{
 	/** style属性値のコレクション */
 	private $style_attribute_collection = array();
 
+	/** 許可されたWebフォント配布元 origin */
+	private $allowed_webfont_providers_origin = array(
+		'cloud.typography.com',
+		'fast.fonts.net',
+		'fonts.googleapis.com',
+		'use.typekit.net',
+		'maxcdn.bootstrapcdn.com',
+		'use.fontawesome.com',
+	);
+
 	/**
 	 * コストラクタ
 	 */
@@ -153,13 +163,16 @@ class AMPConverter{
 		$html_src = preg_replace('/\<style\>/', '<style amp-custom>', $html_src);
 		$stylesheet_contents = '';
 
-		$extract_linked_outernal_css = new extract_linked_outernal_css($this->utils, $this->convert_options);
+		$extract_linked_outernal_css = new extract_linked_outernal_css($this, $this->utils, $this->convert_options);
 		$stylesheet_contents .= $extract_linked_outernal_css->extract($html_src);
 
 		$simple_html_dom = $this->utils->create_simple_html_dom($html_src);
 
 		$ret = $simple_html_dom->find('link[rel=stylesheet]');
 		foreach( $ret as $link ){
+			if( $this->is_url_webfont_provider($link->attr['href']) ){
+				continue;
+			}
 			$link->outertext = '';
 		}
 
@@ -394,4 +407,16 @@ class AMPConverter{
 		return $this->style_attribute_collection;
 	}
 
+	/**
+	 * URLが許可されたWebフォント提供元かどうか調べる
+	 */
+	public function is_url_webfont_provider( $url ){
+		$origins = $this->allowed_webfont_providers_origin;
+		foreach($origins as $origin){
+			if( preg_match('/^(?:https?\:)?\/\/'.preg_quote($origin,'/').'\//s', $url) ){
+				return true;
+			}
+		}
+		return false;
+	}
 }

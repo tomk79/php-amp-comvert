@@ -9,6 +9,9 @@ namespace tomk79\ampConvert;
  */
 class extract_linked_outernal_css{
 
+	/** amp-convert メインクラス */
+	private $ampConv;
+
 	/** ユーティリティ */
 	private $utils;
 
@@ -17,10 +20,12 @@ class extract_linked_outernal_css{
 
 	/**
 	 * コストラクタ
+	 * @param  object $ampConv amp-convert メインクラス
 	 * @param  object $utils ユーティリティ
 	 * @param  array $convert_options オプション
 	 */
-	public function __construct($utils, $convert_options){
+	public function __construct($ampConv, $utils, $convert_options){
+        $this->ampConv = $ampConv;
         $this->utils = $utils;
         $this->convert_options = $convert_options;
 	}
@@ -39,6 +44,9 @@ class extract_linked_outernal_css{
 		$ret = $simple_html_dom->find('link[rel=stylesheet]');
 		foreach( $ret as $link ){
 			$path = $link->attr['href'];
+			if( $this->ampConv->is_url_webfont_provider($path) ){
+				continue;
+			}
 			$rtn .= $this->import_css($path);
 		}
 		return $rtn;
