@@ -1,5 +1,2 @@
 @import url(/res/import/sub/imported005.css);
-.imported004{
-    content: "imported004";
-    background-image: url(../../image.png);
-}
+.imported004{ content: "imported004"; background-image: url(../../image.png); }

@@ -65,10 +65,47 @@ class mainTest extends PHPUnit_Framework_TestCase{
 		$path_base = __DIR__.'/testdata/';
 
 		$html = file_get_contents($path_base.'full.amp.html');
+
+		// LD JSON
+		// and other data script
 		$this->assertSame( preg_match('/'.preg_quote('"@context": "http://schema.org"', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<script type="application/json">', '/').'/s', $html), 1 );
 		$this->assertSame( preg_match('/'.preg_quote('"dataType": "application/json"', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<script type="text/json">', '/').'/s', $html), 1 );
 		$this->assertSame( preg_match('/'.preg_quote('"dataType": "text/json"', '/').'/s', $html), 1 );
 		$this->assertSame( preg_match('/'.preg_quote('console.log(\'Normal JavaScript code.\');', '/').'/s', $html), 0 );
+
+		// IE comment
+		$this->assertSame( preg_match('/'.preg_quote('<!--[if IE 8]>', '/').'/s', $html), 0 );
+		$this->assertSame( preg_match('/'.preg_quote('<!--[if lte IE 7]>', '/').'/s', $html), 0 );
+
+		// WebFonts
+		$this->assertSame( preg_match('/'.preg_quote('<link rel="stylesheet" href="https://fonts.googleapis.com/css.css" />', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<link rel="stylesheet" href="https://cloud.typography.com/css.css" />', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<link rel="stylesheet" href="https://fast.fonts.net/css.css" />', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<link rel="stylesheet" href="https://use.typekit.net/css.css" />', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/css.css" />', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<link rel="stylesheet" href="https://use.fontawesome.com/css.css" />', '/').'/s', $html), 1 );
+
+		// CSS Import
+		$this->assertSame( preg_match('/'.preg_quote('.imported004{ content: "imported004"; background-image: url("res/image.png"); }', '/').'/s', $html), 1 );
+
+		// Inline CSS
+		$this->assertSame( preg_match('/'.preg_quote('<div class="test3 amp-css-1"><p>style attribute 2</p></div>', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('.amp-css-1{color:#ff9;}', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<div class="amp-css-0"><p>style attribute 3</p></div>', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('.amp-css-0{color:#f9f;}', '/').'/s', $html), 1 );
+
+		// AMP Images
+		$this->assertSame( preg_match('/'.preg_quote('<div><amp-img src="./res/image.png" alt="Test Image" width="800" height="600" layout="responsive"></amp-img></div>', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<div><amp-img src="res/image.png" alt="Test Image (Not Closed)" width="800" height="600" layout="responsive"></amp-img></div>', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<div><amp-img src="res/image.png" width="20" height="30" alt="Test Image (大きさを指定されている)" layout="responsive"></amp-img></div>', '/').'/s', $html), 1 );
+
+		// Other AMP tags
+		$this->assertSame( preg_match('/'.preg_quote('<div><amp-iframe sandbox="allow-scripts allow-same-origin" layout="responsive" height="315" width="560" src="part.html"></amp-iframe></div>', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<div><amp-video src="res/video.mp4" layout="responsive" height="315" width="560"></amp-video></div>', '/').'/s', $html), 1 );
+		$this->assertSame( preg_match('/'.preg_quote('<div><amp-audio src="res/audio.mp3"></amp-audio></div>', '/').'/s', $html), 1 );
+
 
 	} // testCheckOutput()
 
