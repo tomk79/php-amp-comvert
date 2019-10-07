@@ -83,6 +83,10 @@ echo $amp;
 
 ## 更新履歴 - Change log
 
+### tomk79/amp-convert v0.1.7 (リリース日未定)
+
+- PHP 7.3 系で発生する不具合を修正。
+
 ### tomk79/amp-convert v0.1.6 (2019年2月17日)
 
 - Webフォント配布サイトへの `<link rel="stylesheet" />` を変換しないようになった。
