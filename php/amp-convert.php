@@ -353,7 +353,7 @@ class AMPConverter{
 			}
 			$class_name = 'amp-css-'.$class_idxs[$class_idx];
 
-			$this->style_attribute_collection[$class_name] = $tmp_css;
+			$this->style_attribute_collection[$class_name] = htmlspecialchars_decode($tmp_css);
 			if(!@strlen($element->attr['class'])){
 				$element->attr[' class'] = $class_name;
 			}else{
