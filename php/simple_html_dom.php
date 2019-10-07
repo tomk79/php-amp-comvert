@@ -480,18 +480,18 @@ class simple_html_dom_node
             if ($val===null || $val===false)
                 continue;
 
-            $ret .= $this->_[HDOM_INFO_SPACE][$i][0];
+            $ret .= @$this->_[HDOM_INFO_SPACE][$i][0];
             //no value attr: nowrap, checked selected...
             if ($val===true)
                 $ret .= $key;
             else {
-                switch ($this->_[HDOM_INFO_QUOTE][$i])
+                switch (@$this->_[HDOM_INFO_QUOTE][$i])
                 {
                     case HDOM_QUOTE_DOUBLE: $quote = '"'; break;
                     case HDOM_QUOTE_SINGLE: $quote = '\''; break;
                     default: $quote = '';
                 }
-                $ret .= $key.$this->_[HDOM_INFO_SPACE][$i][1].'='.$this->_[HDOM_INFO_SPACE][$i][2].$quote.$val.$quote;
+                $ret .= $key.@$this->_[HDOM_INFO_SPACE][$i][1].'='.@$this->_[HDOM_INFO_SPACE][$i][2].$quote.$val.$quote;
             }
         }
         $ret = $this->dom->restore_noise($ret);
