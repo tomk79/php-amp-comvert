@@ -83,6 +83,10 @@ echo $amp;
 
 ## 更新履歴 - Change log
 
+### tomk79/amp-convert v0.2.0 (リリース日未定)
+
+- Update `lullabot/amp` to `^2.0`
+
 ### tomk79/amp-convert v0.1.7 (2019年10月7日)
 
 - PHP 7.3 系で発生する不具合を修正。
