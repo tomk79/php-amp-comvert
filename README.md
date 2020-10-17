@@ -83,7 +83,7 @@ echo $amp;
 
 ## 更新履歴 - Change log
 
-### tomk79/amp-convert v0.2.0 (リリース日未定)
+### tomk79/amp-convert v0.2.0 (2020年10月17日)
 
 - Update `lullabot/amp` to `^2.0`
 
